@@ -1,9 +1,11 @@
 table(
- user => table(
-   name => johndoe,
-   preferences => table(
-     theme => dark,
-     notifications => True
-    )
+ constants => table(
+   max_connections => 100,
+   server_name => primary_server
+  ),
+ server => table(
+   name => primary_server,
+   max_connections => 100,
+   metrics => [ cpu memory ]
   )
 )

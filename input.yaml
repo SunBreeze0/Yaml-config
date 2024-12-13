@@ -1,5 +1,10 @@
-user:
-  name: johndoe
-  preferences:
-    theme: dark
-    notifications: true
+constants:
+  max_connections: 100
+  server_name: "primary_server"
+
+server:
+  name: "{server_name}"
+  max_connections: "{max_connections}"
+  metrics:
+    - cpu
+    - memory

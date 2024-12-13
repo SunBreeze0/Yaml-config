@@ -3,20 +3,35 @@ import yaml
 import re
 import sys
 
+# Глобальный словарь для хранения констант
+constants = {}
+
 def yaml_to_custom_language(data, indent=0):
     """Преобразует структуру данных YAML в текст на учебном конфигурационном языке."""
     indent_str = " " * indent
     if isinstance(data, dict):
-        entries = ",\n".join(
-            f"{indent_str} {key} => {yaml_to_custom_language(value, indent + 2)}" for key, value in data.items()
-        )
-        return f"table(\n{entries}\n{indent_str})"
+        entries = []
+        for key, value in data.items():
+            if isinstance(value, (int, float, str, list, dict)):
+                entries.append(f"{indent_str} {key} => {yaml_to_custom_language(value, indent + 2)}")
+            else:
+                entries.append(f"{indent_str} {yaml_to_custom_language(value, indent + 2)}")
+        return f"table(\n{',\n'.join(entries)}\n{indent_str})"
     elif isinstance(data, list):
         return "[ " + " ".join(yaml_to_custom_language(item, indent) for item in data) + " ]"
     elif isinstance(data, str):
         # Проверка, что строка безопасна
         if re.match(r'^[a-z][a-z0-9_]*$', data):
             return data
+        elif data.startswith("//"):
+            return data  # Это комментарий
+        elif data.startswith("{") and data.endswith("}"):
+            # Вставка константы
+            const_name = data[1:-1]
+            if const_name in constants:
+                return str(constants[const_name])
+            else:
+                raise ValueError(f"Неизвестная константа: {const_name}")
         return f'@"{data}"'
     elif isinstance(data, (int, float)):
         return str(data)
@@ -41,6 +56,13 @@ def write_output_file(output_path, content):
     with open(output_path, 'w') as file:
         file.write(content)
 
+def parse_constants(data):
+    """Извлекает константы из YAML-файла."""
+    if "constants" in data:
+        for key, value in data["constants"].items():
+            validate_identifier(key)
+            constants[key] = value
+
 def main():
     parser = argparse.ArgumentParser(description="Инструмент для преобразования YAML в учебный конфигурационный язык.")
     parser.add_argument("--input", required=True, help="Путь к входному YAML-файлу.")
@@ -51,6 +73,9 @@ def main():
     try:
         # Чтение YAML
         data = parse_yaml_file(args.input)
+
+        # Извлечение констант
+        parse_constants(data)
 
         # Преобразование в учебный конфигурационный язык
         output_content = yaml_to_custom_language(data)
