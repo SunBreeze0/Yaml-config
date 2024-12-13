@@ -1,10 +1,10 @@
 constants:
   max_connections: 100
-  server_name: "primary_server"
+  server_name: "1_server"
 
 server:
   name: "{server_name}"
   max_connections: "{max_connections}"
-  metrics:
-    - cpu
-    - memory
+  in_process_connections: 11
+  something:
+    data: [hello, world]

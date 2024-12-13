@@ -26,8 +26,7 @@ def yaml_to_custom_language(data, indent=0):
         elif data.startswith("//"):
             return data  # Это комментарий
         elif data.startswith("{") and data.endswith("}"):
-            # Вставка константы
-            const_name = data[1:-1]
+            const_name = data[1:-1] # Вставка константы
             if const_name in constants:
                 return str(constants[const_name])
             else:
@@ -36,12 +35,12 @@ def yaml_to_custom_language(data, indent=0):
     elif isinstance(data, (int, float)):
         return str(data)
     else:
-        raise ValueError(f"Unsupported data type: {type(data)}")
+        raise ValueError(f"Неподдерживаемый тип данных: {type(data)}")
 
 def validate_identifier(identifier):
     """Проверяет, что идентификатор соответствует правилам синтаксиса."""
     if not re.match(r'^[a-z][a-z0-9_]*$', identifier):
-        raise ValueError(f"Invalid identifier: {identifier}")
+        raise ValueError(f"Неверный идентификатор: {identifier}")
 
 def parse_yaml_file(input_path):
     """Считывает и парсит YAML-файл."""
@@ -49,7 +48,7 @@ def parse_yaml_file(input_path):
         try:
             return yaml.safe_load(file)
         except yaml.YAMLError as e:
-            raise ValueError(f"Error parsing YAML file: {e}")
+            raise ValueError(f"Ошибка парсинга: {e}")
 
 def write_output_file(output_path, content):
     """Записывает сгенерированный текст в файл."""

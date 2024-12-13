@@ -1,11 +1,14 @@
 table(
  constants => table(
    max_connections => 100,
-   server_name => primary_server
+   server_name => @"1_server"
   ),
  server => table(
-   name => primary_server,
+   name => 1_server,
    max_connections => 100,
-   metrics => [ cpu memory ]
+   in_process_connections => 11,
+   something => table(
+     data => [ hello world ]
+    )
   )
 )
