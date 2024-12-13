@@ -1,0 +1,9 @@
+table(
+ user => table(
+   name => johndoe,
+   preferences => table(
+     theme => dark,
+     notifications => True
+    )
+  )
+)
