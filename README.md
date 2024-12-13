@@ -1,4 +1,4 @@
-# YAML to Custom Configuration Language Tool
+# Интсрумент преобразования YAML на учебный конфигурационный язык.
 
 ## Описание
 
