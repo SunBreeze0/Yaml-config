@@ -75,9 +75,7 @@ value: "{my_const}"
 
 ### Массивы
 ```yaml
-array:
-  - value1
-  - value2
+array: [value1, value2]
 ```
 преобразуется в:
 ```plaintext
